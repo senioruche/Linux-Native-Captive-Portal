@@ -1,24 +1,22 @@
-# Linux-Native-Captive-Portal
-A lightweight, high-performance Walled Garden and Captive Portal system built for Debian using nftables, dnsmasq, and a multi-threaded Python backend.
+# Linux-Native Hardened Captive Portal
 
-🛠️ The Tech Stack
+A lightweight, secure, and scalable captive portal for Debian using `nftables` and `Python`.
 
-Routing: Debian 12 (Bookworm)
+## Features
+- **Walled Garden:** Selective access to Google/YouTube before login via `dnsmasq` nftsets.
+- **Security:** Obfuscated unlock paths and TCP Resets on Port 443 to prevent browser hangs.
+- **Scalability:** Multi-threaded Python backend.
+- **Dynamic Rules:** Automated firewall whitelisting with 2-hour session timeouts.
 
-Firewall: nftables (Dynamic sets for IP whitelisting)
+## Logic Flow
 
-DNS/DHCP: dnsmasq (IPSet/nftset integration)
+1. Client makes an HTTP request.
+2. `nftables` redirects unauthorized traffic to the local Python server.
+3. User clicks "Accept," triggering a call to the secret endpoint.
+4. Python executes an `nft` command to add the user's IP to the `allowed_clients` set.
+5. User gains full internet access via NAT.
 
-Backend: Python 3 (Multi-threaded HTTP server)
-
-Hosting : Parallels Desktop
-
-🧠 How It Works
-
-Interception: nftables intercepts unauthorized Port 80 traffic and redirects it to a local Python handler.
-
-The Walled Garden: dnsmasq populates a dynamic nftables set (google_ips) to allow access to specific domains (Google/YouTube) before authentication.
-
-Authentication: The Python script serves a local splash page. Upon clicking "Accept," the script dynamically updates the nftables set to grant the client full internet access for a configurable timeout.
-
-Security: Implements "Secret Path" obfuscation and TCP Resets on Port 443 to prevent browser hanging and directory brute-forcing.
+## Installation
+1. Install dependencies: `sudo apt install nftables dnsmasq python3`
+2. Apply firewall: `sudo nft -f config/nftables.conf`
+3. Start portal: `sudo python3 src/portal.py`

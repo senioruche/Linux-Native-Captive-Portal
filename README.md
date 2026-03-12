@@ -11,6 +11,8 @@ DNS/DHCP: dnsmasq (IPSet/nftset integration)
 
 Backend: Python 3 (Multi-threaded HTTP server)
 
+Hosting : Parallels Desktop
+
 🧠 How It Works
 
 Interception: nftables intercepts unauthorized Port 80 traffic and redirects it to a local Python handler.
